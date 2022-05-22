@@ -10,6 +10,8 @@ function App() {
   const [currentWeather,setcurrentWeather]=useState('')
   const [temperature,setTemperature]=useState('')
   const [error,setError]=useState('')
+  let input=''
+  
 
   const inputElement =useRef()
 
@@ -34,13 +36,17 @@ axios.request(options).then(function (response) {
     setCountry(response.data.location.country)
 }).catch(function (error) {
 	console.error(error);
+  setError('Unable to fetch weather information.')
 });
 
 
   }
   let getWeather=()=>{
+    
+    
     console.log('getweahter function.....')
-  const input=inputElement.current.value
+    
+  input=inputElement.current.value
   console.log('input',input)
   
   const options = {
@@ -74,7 +80,8 @@ axios.request(options).then(function (response) {
     setCountry('')
     setTemperature('')
     setcurrentWeather('')
-    setError(error.response.data.message)
+    setError('Unable to fetch weather information.')
+    
 
   });
   }
@@ -89,13 +96,18 @@ axios.request(options).then(function (response) {
   } 
 
   useEffect(()=>{
-    console.log('useeffect executed.....')
+    console.log('useeffect inside')
+    console.log('input',input) 
+    
+    
+      console.log('input',input)
+    console.log('useeffect executed.....')  
     navigator.geolocation.getCurrentPosition(function(position){
       console.log('Lat',position.coords.latitude)
       console.log('Long',position.coords.longitude)
       intialWeather(position.coords.latitude,position.coords.longitude)
     })
-  })
+  },[])
 
   return (
     <div className={(temperature >16) ? 'app':'app warm'}> 
@@ -107,8 +119,6 @@ axios.request(options).then(function (response) {
         className="search-bar"
         placeholder="Search..."
         ref={inputElement}
-        // onChange={(e,evt)=>{getWeather(e.target.value,evt)}}
-        // onKeyDown={(e,evt)=>{getWeather(e.target.value,evt)}}
         />
         <input className="button" type="button"
         
